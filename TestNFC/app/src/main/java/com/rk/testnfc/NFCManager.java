@@ -1,4 +1,4 @@
-package com.rk.testnfc;
+package com.example.dhyeydhwani.testnfc;
 
 import android.app.Activity;
 import android.nfc.NfcAdapter;

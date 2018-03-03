@@ -1,28 +1,132 @@
-package com.rk.testnfc;
+package com.example.dhyeydhwani.testnfc;
 
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.AssetManager;
 import android.nfc.NfcAdapter;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.rk.testnfc.NFCManager;
+import com.rk.testnfc.R;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.HashSet;
 
 public class MainActivity extends AppCompatActivity {
     //    NfcAdapter mNfcAdapter;
     NFCManager nfcMger;
     private TextView t1;
+    private TextView desc;
+    private TextView quantity;
+    private TextView price;
+    private TextView names;
+    private EditText quan;
+    private ImageButton myBag;
+    private ImageButton cart;
+    private ImageButton back;
+    private ArrayList<String> myList = new ArrayList<String>();
+    private ArrayList<Integer> myCount = new ArrayList<>();
+    private String out;
+    private ArrayList<String> name = new ArrayList<>();
+    private ArrayList<String> descrip = new ArrayList<>();
+    private ArrayList<Integer> cost = new ArrayList<>();
+    private ArrayList<String> id = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         nfcMger = new NFCManager(this);
-    }
+        desc = findViewById(R.id.desc);
+        quan = findViewById(R.id.qtyval);
+        quantity = findViewById(R.id.quantity);
+        myBag = findViewById(R.id.mylist);
+        cart = findViewById(R.id.addtocart);
+        back = findViewById(R.id.back);
+        names = findViewById(R.id.names);
+        price = findViewById(R.id.price);
+        nfcMger = new NFCManager(this);
+        quan.setText("1");
+        int i;
 
-    @Override
-    protected void onResume() {
+        AssetManager assetManager = getAssets();
+        InputStream inputStream = null;
+        try {
+            inputStream = assetManager.open("Items.txt");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        BufferedReader in = new BufferedReader(new InputStreamReader(inputStream));
+        String line;
+        try {
+            while((line = in.readLine()) != null) {
+                String word = line.trim();
+                Log.d("word :",word);
+                String mid = "hello";
+                int ctr=0;
+                mid = String.valueOf(word.charAt(0));
+                Log.d("Mid :",mid);
+                for(i=1;i<word.length();i++){
+                    mid=mid+word.charAt(i);
+                    if(word.charAt(i+1)=='$')
+                    {
+                        if(ctr==0)
+                        {
+                            Log.d("Inner Mid :",mid);
+                            id.add(mid);
+                            ctr++;
+                            i++;
+                            mid=String.valueOf(word.charAt(i+1));
+                            i++;
+                        }
+                        else if(ctr==1)
+                        {
+                            name.add(mid);
+                            ctr++;
+                            i++;
+                            mid=String.valueOf(word.charAt(i+1));
+                            i++;
+                        }
+                        else if(ctr==2)
+                        {
+                            cost.add(Integer.parseInt(mid));
+                            ctr++;
+                            i++;
+                            mid=String.valueOf(word.charAt(i+1));
+                            i++;
+                        }
+                        else
+                        {
+                            descrip.add(mid);
+                            ctr++;
+                            i++;
+                            //mid=String.valueOf(word.charAt(i+1));
+                            i++;
+                        }
+                    }
+
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    protected void onResume(){
         super.onResume();
+
         int temp = nfcMger.verifyNFC();
         if(temp==0) {
             Intent nfcIntent = new Intent(this, getClass());
@@ -51,15 +155,24 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onNewIntent(Intent intent) {
-
+        int j;
         t1 = findViewById(R.id.tagUID);
         t1.setText(ByteArrayToHexString(intent.getByteArrayExtra(NfcAdapter.EXTRA_ID)));
+        String ids = (String)t1.getText();
+        for(j=0;j<4;j++){
+            if(ids.equals(id.get(j))){
+                break;
+            }
+        }
+        desc.setText(descrip.get(j));
+        names.setText(name.get(j));
+        price.setText(cost.get(j).toString());
     }
 
     private String ByteArrayToHexString(byte [] inarray) {
         int i, j, in;
         String [] hex = {"0","1","2","3","4","5","6","7","8","9","A","B","C","D","E","F"};
-        String out= "";
+        out= "";
         for(j = 0 ; j < inarray.length ; ++j)
         {
             in = (int) inarray[j] & 0xff;
@@ -75,6 +188,62 @@ public class MainActivity extends AppCompatActivity {
     {
         // AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
         //alertDialog.setTitle(R.string.enable_nfc_title)
+    }
+
+    public void addToCart(View view)
+    {
+        Toast.makeText(this, "Item Added!", Toast.LENGTH_SHORT).show();
+        String temp = quan.getText().toString();
+        int var = Integer.parseInt(temp);
+        quan.setText("1");
+        desc.setText("");
+        t1.setText("Item Details");
+        myList.add(out);
+        myCount.add(var);
+
+    }
+
+    public void viewMyList(View view)
+    {
+        back.setVisibility(View.VISIBLE);
+        myBag.setVisibility(View.INVISIBLE);
+        cart.setVisibility(View.INVISIBLE);
+        quan.setVisibility(View.INVISIBLE);
+        quantity.setVisibility(View.INVISIBLE);
+        t1.setVisibility(View.INVISIBLE);
+        String t2 = new String();
+        names.setVisibility(View.INVISIBLE);
+        price.setVisibility(View.INVISIBLE);
+        int i,j;
+        if(myCount==null){
+            desc.setText("Your Cart is Empty");
+        }
+        for(i=0;i<myList.size();i++)
+        {
+            for(j=0;j<names.length();j++){
+                if(myList.get(i).equals(id.get(j)))
+                    break;
+            }
+            t2 += name.get(j) + "\t" + cost.get(j) + " x " + myCount.get(i).toString() + "\n";
+            desc.setText(t2);
+        }
+
+
+    }
+
+    public void backMethod(View view){
+        back.setVisibility(View.INVISIBLE);
+        myBag.setVisibility(View.VISIBLE);
+        cart.setVisibility(View.VISIBLE);
+        quan.setVisibility(View.VISIBLE);
+        quantity.setVisibility(View.VISIBLE);
+        names.setVisibility(View.VISIBLE);
+        price.setVisibility(View.VISIBLE);
+        names.setText("Name :");
+        price.setText("Price :");
+        desc.setText("Description");
+        t1.setVisibility(View.VISIBLE);
+        t1.setText("");
     }
 
 /*    private NfcAdapter nfcAdapter;
