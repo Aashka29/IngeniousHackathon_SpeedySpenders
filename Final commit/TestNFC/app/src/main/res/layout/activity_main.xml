@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/tagUID"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/back"
+            android:layout_alignParentStart="true"
+            android:layout_gravity="center_horizontal"
+            android:autoLink="web"
+            android:text="NFC Test"
+            android:textSize="18dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="italic" />
+
+        <TextView
+            android:id="@+id/taginfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/info"
+            android:textStyle="bold" />
+
+        <ImageButton
+            android:id="@+id/mylist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@+id/info"
+            android:layout_marginEnd="15dp"
+            android:background="#ffffff"
+            android:onClick="viewMyList"
+            app:srcCompat="@drawable/mybag" />
+
+        <ImageButton
+            android:id="@+id/addtocart"
+            android:layout_width="70dp"
+            android:layout_height="60dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="60dp"
+            android:background="#ffffff"
+            android:onClick="addToCart"
+            app:srcCompat="@drawable/addtocart" />
+
+        <TextView
+            android:id="@+id/desc"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:layout_above="@+id/qtyval"
+            android:layout_alignParentStart="true"
+            android:layout_marginBottom="22dp"
+            android:text="Description" />
+
+        <TextView
+            android:id="@+id/quantity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/addtocart"
+            android:layout_alignStart="@+id/desc"
+            android:layout_marginBottom="13dp"
+            android:text="Quantity: " />
+
+        <EditText
+            android:id="@+id/qtyval"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/quantity"
+            android:layout_alignEnd="@+id/addtocart" />
+
+        <ImageButton
+            android:id="@+id/back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/info"
+            android:background="#ffffff"
+            android:visibility="invisible"
+            app:srcCompat="@drawable/back"
+            android:onClick="backMethod"/>
+
+        <TextView
+            android:id="@+id/names"
+            android:layout_marginBottom="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/desc"
+            android:layout_alignParentStart="true"
+            android:text="Name :" />
+
+        <TextView
+            android:id="@+id/price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/addtocart"
+            android:layout_alignTop="@+id/names"
+            android:layout_marginStart="50dp"
+            android:text="Price :" />
+
+        <ImageButton
+            android:id="@+id/exit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/addtocart"
+            android:layout_toStartOf="@+id/mylist"
+            android:background="#ffffff"
+            app:srcCompat="@drawable/exit" />
+    </RelativeLayout>
+
+
+</LinearLayout>
